@@ -28,11 +28,15 @@ class SWEM():
             raise ValueError("Specify valid initialize range: "
                              f"[{self.oov_initialize_range[0]}, {self.oov_initialize_range[1]}]")
 
-    def get_word_embeddings(self, text):
+    def get_word_embeddings(self, text, words):
+        """add words(tokens)"""
         np.random.seed(abs(hash(text)) % (10 ** 8))
-
+        
         vectors = []
-        for word in self.tokenizer.tokenize(text):
+        if text is not None:
+            words = self.tokenizer.tokenize(text)
+            
+        for word in words
             if word in self.vocab:
                 vectors.append(self.w2v[word])
             else:
@@ -41,20 +45,20 @@ class SWEM():
                                                  self.embedding_dim))
         return np.array(vectors)
 
-    def average_pooling(self, text):
-        word_embeddings = self.get_word_embeddings(text)
+    def average_pooling(self, text, words):
+        word_embeddings = self.get_word_embeddings(text, words)
         return np.mean(word_embeddings, axis=0)
 
-    def max_pooling(self, text):
-        word_embeddings = self.get_word_embeddings(text)
+    def max_pooling(self, text, words):
+        word_embeddings = self.get_word_embeddings(text, words)
         return np.max(word_embeddings, axis=0)
 
-    def concat_average_max_pooling(self, text):
-        word_embeddings = self.get_word_embeddings(text)
+    def concat_average_max_pooling(self, text, words):
+        word_embeddings = self.get_word_embeddings(text, words)
         return np.r_[np.mean(word_embeddings, axis=0), np.max(word_embeddings, axis=0)]
 
-    def hierarchical_pooling(self, text, n):
-        word_embeddings = self.get_word_embeddings(text)
+    def hierarchical_pooling(self, text, words, n):
+        word_embeddings = self.get_word_embeddings(text, words)
 
         text_len = word_embeddings.shape[0]
         if n > text_len:
