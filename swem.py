@@ -36,7 +36,7 @@ class SWEM():
         if text is not None:
             words = self.tokenizer.tokenize(text)
             
-        for word in words
+        for word in words:
             if word in self.vocab:
                 vectors.append(self.w2v[word])
             else:
